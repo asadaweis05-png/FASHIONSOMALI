@@ -10,7 +10,9 @@ export const getAIStylistResponse = async (userInput) => {
     if (!apiKey) {
       throw new Error("Missing VITE_GEMINI_API_KEY in environment variables.");
     }
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-1.5-flash-latest' // Changed to latest for better reliability
+    });
     
     // Convert products to string
     const catalogString = products.map(p => `- ${p.name} (${p.category}, $${p.price})`).join('\n');
