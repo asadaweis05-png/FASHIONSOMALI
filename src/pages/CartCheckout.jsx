@@ -44,8 +44,26 @@ const CartCheckout = () => {
   const discountAmount = subtotal * (discountPercent / 100);
   const total = subtotal - discountAmount + deliveryFee;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Save to local storage for the user
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const userId = session.user.id;
+      const existingOrders = JSON.parse(localStorage.getItem(`user_orders_${userId}`) || '[]');
+      
+      const newOrder = {
+        id: Math.floor(Math.random() * 100000),
+        date: new Date().toLocaleDateString('so-SO'),
+        items: cartItems,
+        total: total,
+        status: 'La dhiibay' // Delivered / Processed
+      };
+      
+      localStorage.setItem(`user_orders_${userId}`, JSON.stringify([newOrder, ...existingOrders]));
+    }
+
     setStep(3); // Go to success
   };
 

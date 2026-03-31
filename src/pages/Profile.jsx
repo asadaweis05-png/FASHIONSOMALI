@@ -11,15 +11,26 @@ const Profile = () => {
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session) {
+        const userId = session.user.id;
+        setOrders(JSON.parse(localStorage.getItem(`user_orders_${userId}`) || '[]'));
+      }
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session) {
+        const userId = session.user.id;
+        setOrders(JSON.parse(localStorage.getItem(`user_orders_${userId}`) || '[]'));
+      } else {
+        setOrders([]);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -116,21 +127,42 @@ const Profile = () => {
         </aside>
 
         <main className="profile-content">
-          <h1 className="title-large" style={{fontSize: '2rem', marginBottom: '2rem'}}>Akoonkayga</h1>
+          <h1 className="title-large" style={{fontSize: '2rem', marginBottom: '0.5rem'}}>Akoonkayga</h1>
+          <p style={{color: 'var(--text-muted)', marginBottom: '2rem'}}>Tirada dalabyada aad samaysay: <strong>{orders.length}</strong></p>
           
           <div className="orders-list" style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
-            <div className="order-card" style={{border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem', backgroundColor: '#fff'}}>
-              <div className="order-header" style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem', marginBottom: '1rem'}}>
-                <div>
-                  <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Dalabka #49281 (Mock)</span>
-                  <p style={{fontWeight: '500'}}>Luulyo 12, 2026</p>
+            {orders.length === 0 ? (
+              <p style={{padding: '2rem', textAlign: 'center', backgroundColor: '#fff', borderRadius: '12px', color: 'var(--text-muted)'}}>
+                Weli wax dalab ah maadan samayn.
+              </p>
+            ) : (
+              orders.map(order => (
+                <div key={order.id} className="order-card" style={{border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem', backgroundColor: '#fff'}}>
+                  <div className="order-header" style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem', marginBottom: '1rem'}}>
+                    <div>
+                      <span style={{fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em'}}>Dalabka #{order.id}</span>
+                      <p style={{fontWeight: '500'}}>{order.date}</p>
+                    </div>
+                    <div style={{textAlign: 'right'}}>
+                      <span className="badge-pill" style={{backgroundColor: '#dcfce7', color: '#166534'}}>{order.status}</span>
+                      <p style={{fontWeight: '600', marginTop: '0.5rem'}}>${order.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="order-items" style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                    {order.items.map((item, idx) => (
+                      <div key={idx} style={{display: 'flex', gap: '1rem'}}>
+                        <img src={item.image} alt={item.name} style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px'}} />
+                        <div>
+                          <h4 style={{fontFamily: 'var(--font-heading)', fontSize: '1rem'}}>{item.name}</h4>
+                          <p style={{fontSize: '0.85rem', color: 'var(--text-muted)'}}>Xaddiga: {item.quantity}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div style={{textAlign: 'right'}}>
-                  <span className="badge-pill" style={{backgroundColor: '#dcfce7', color: '#166534'}}>La dhiibay</span>
-                  <p style={{fontWeight: '600', marginTop: '0.5rem'}}>$340.00</p>
-                </div>
-              </div>
-            </div>
+              ))
+            )}
             
           </div>
         </main>
