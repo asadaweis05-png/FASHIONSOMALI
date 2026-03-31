@@ -44,16 +44,29 @@ export const getAIStylistResponse = async (userInput) => {
     `;
 
     const result = await model.generateContent(prompt);
-    let text = result.response.text().trim();
+    const responseText = result.response.text();
     
-    // Clean up potential markdown blocks if the model accidentally includes them
-    if (text.startsWith('\`\`\`json')) {
-      text = text.replace(/^\`\`\`json/, '').replace(/\`\`\`$/, '').trim();
-    } else if (text.startsWith('\`\`\`')) {
-      text = text.replace(/^\`\`\`/, '').replace(/\`\`\`$/, '').trim();
+    // Robust extraction of JSON from response
+    try {
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+      
+      // Fallback if no JSON found but there is text
+      return {
+        message: responseText.trim(),
+        intent: "chat",
+        categories: []
+      };
+    } catch (parseError) {
+      console.warn("JSON Parse Error, falling back to raw text:", parseError);
+      return {
+        message: responseText.trim(),
+        intent: "chat",
+        categories: []
+      };
     }
-
-    return JSON.parse(text);
   } catch (error) {
     console.error("AI Stylist Error Detailed:", error.message || error);
     console.error("API Key configured:", !!apiKey);
