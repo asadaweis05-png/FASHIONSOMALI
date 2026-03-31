@@ -187,3 +187,68 @@ h4 {
 .section-padding {
   padding: 4rem 0;
 }
+
+/* Coupon Popup */
+.coupon-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 59, 94, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.coupon-popup {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  color: var(--text-muted);
+}
+
+.gift-icon-anim {
+  width: 72px;
+  height: 72px;
+  background: var(--pill-bg);
+  color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  animation: bounceGift 1.5s infinite;
+}
+
+@keyframes bounceGift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.coupon-code-box {
+  background: var(--secondary-color);
+  border: 2px dashed var(--primary-color);
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 1.5rem 0 2rem;
+}
+
+.coupon-code-box code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 0.1em;
+}

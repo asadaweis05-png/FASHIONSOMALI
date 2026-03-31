@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { X, Gift } from 'lucide-react';
 import NavBar from './components/NavBar';
 import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
@@ -14,6 +15,7 @@ import Footer from './components/Footer';
 
 function ScrollAndRefHandler() {
   const location = useLocation();
+  const [showCoupon, setShowCoupon] = useState(false);
 
   useEffect(() => {
     // Scroll to top on route change
@@ -24,24 +26,36 @@ function ScrollAndRefHandler() {
     const refParam = params.get('ref');
 
     if (refParam) {
-      // We found a referral link visit!
       console.log('Referral link visited for user:', refParam);
       
-      // To prevent a user from refreshing the page over and over to give infinite visits:
-      // We check if this specific browser has already visited this ref link recently.
       const hasVisited = sessionStorage.getItem(`visited_ref_${refParam}`);
       if (!hasVisited) {
-        // Increment the visits for that user ID in our mock backend (localStorage)
         const currentVisits = parseInt(localStorage.getItem(`referral_visits_${refParam}`) || '0', 10);
         localStorage.setItem(`referral_visits_${refParam}`, currentVisits + 1);
-        
-        // Mark as visited in this browser session
         sessionStorage.setItem(`visited_ref_${refParam}`, 'true');
+        
+        // Show coupon popup for the visitor!
+        setShowCoupon(true);
       }
     }
   }, [location]);
 
-  return null;
+  if (!showCoupon) return null;
+
+  return (
+    <div className="coupon-popup-overlay">
+      <div className="coupon-popup">
+        <button className="close-popup" onClick={() => setShowCoupon(false)}><X size={18}/></button>
+        <div className="gift-icon-anim"><Gift size={32} /></div>
+        <h3>Shukran! (Mahadsanid)</h3>
+        <p>Sababtoo ah inaad soo booqatay xiriirka Aura, waxaad ku guuleysatay 10% qiimo dhimis ah.</p>
+        <div className="coupon-code-box">
+          <code>AURA10</code>
+        </div>
+        <button className="btn-primary" onClick={() => setShowCoupon(false)}>Isticmaal Hadda</button>
+      </div>
+    </div>
+  );
 }
 
 function App() {

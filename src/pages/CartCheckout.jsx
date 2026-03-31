@@ -27,6 +27,9 @@ const CartCheckout = () => {
   };
 
   const [discountPercent, setDiscountPercent] = useState(0);
+  const [couponCode, setCouponCode] = useState('');
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState('');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -38,10 +41,21 @@ const CartCheckout = () => {
     });
   }, []);
 
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    if (couponCode.toUpperCase() === 'AURA10') {
+      setIsCouponApplied(true);
+      setCouponError('');
+    } else {
+      setCouponError('Coupon-kaad gelisay sax maahan.');
+    }
+  };
+
   const calculateSubtotal = () => cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const deliveryFee = 15;
   const subtotal = calculateSubtotal();
-  const discountAmount = subtotal * (discountPercent / 100);
+  const effectiveDiscountPercent = discountPercent + (isCouponApplied ? 10 : 0);
+  const discountAmount = subtotal * (effectiveDiscountPercent / 100);
   const total = subtotal - discountAmount + deliveryFee;
 
   const handleSubmit = async (e) => {
@@ -166,14 +180,9 @@ const CartCheckout = () => {
           <div className="checkout-summary" style={{backgroundColor: '#fff', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '2rem', height: 'max-content'}}>
             <h3 style={{fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '1.5rem'}}>Macluumaadka Dalabka</h3>
             
-            <div className="summary-line" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--text-muted)'}}>
-              <span>Qiimaha</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            
-            {discountPercent > 0 && (
+            {effectiveDiscountPercent > 0 && (
               <div className="summary-line" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--success-color)'}}>
-                <span>Abaalgud ({discountPercent}%)</span>
+                <span>Qiimo Dhimis ({effectiveDiscountPercent}%)</span>
                 <span>-${discountAmount.toFixed(2)}</span>
               </div>
             )}
@@ -182,6 +191,23 @@ const CartCheckout = () => {
               <span>Gaarsiinta</span>
               <span>${deliveryFee.toFixed(2)}</span>
             </div>
+
+            {/* Coupon Section */}
+            <form onSubmit={handleApplyCoupon} style={{marginBottom: '1.5rem', display: 'flex', gap: '0.5rem'}}>
+               <input 
+                 type="text" 
+                 placeholder="Coupon code..." 
+                 value={couponCode}
+                 onChange={(e) => setCouponCode(e.target.value)}
+                 style={{flex: 1, padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.85rem'}}
+                 disabled={isCouponApplied}
+               />
+               <button type="submit" className="btn-outline" style={{padding: '0.5rem 1rem', fontSize: '0.8rem'}} disabled={isCouponApplied}>
+                  {isCouponApplied ? 'OK' : 'Gasho'}
+               </button>
+            </form>
+            {couponError && <p style={{color: '#ef4444', fontSize: '0.75rem', marginTop: '-1rem', marginBottom: '1rem'}}>{couponError}</p>}
+
             <div className="summary-line total" style={{display: 'flex', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontWeight: '600', fontSize: '1.2rem', color: 'var(--primary-color)', marginBottom: '2rem'}}>
               <span>Wadarta</span>
               <span>${total.toFixed(2)}</span>
