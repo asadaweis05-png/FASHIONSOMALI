@@ -26,6 +26,13 @@ const PaymentPopup = ({ orderInfo, onPay, onCancel }) => {
         };
         
         localStorage.setItem(`user_orders_${userId}`, JSON.stringify([newOrder, ...existingOrders]));
+
+        // Save to GLOBAL orders for Admin
+        const globalOrders = JSON.parse(localStorage.getItem('global_orders') || '[]');
+        localStorage.setItem('global_orders', JSON.stringify([
+          { ...newOrder, customer: session.user.email },
+          ...globalOrders
+        ]));
       }
 
       setIsProcessing(false);

@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { products } from '../data/mockData';
 import { Package, ShoppingBag, Users, Plus, Edit, Trash2 } from 'lucide-react';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('products');
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const loaded = JSON.parse(localStorage.getItem('global_orders') || '[]');
+    setOrders(loaded);
+  }, [activeTab]);
 
   return (
     <div className="admin-dashboard">
@@ -89,18 +95,20 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>#ORD-2021</td>
-                    <td>Ahmed Ali</td>
-                    <td>$125.00</td>
-                    <td><span className="badge success">Delivered</span></td>
-                  </tr>
-                  <tr>
-                    <td>#ORD-2022</td>
-                    <td>Fadumo Hassan</td>
-                    <td>$45.00</td>
-                    <td><span className="badge warning">Processing</span></td>
-                  </tr>
+                  {orders.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Weli ma jiraan wax dalab ah.</td>
+                    </tr>
+                  ) : (
+                    orders.map(order => (
+                      <tr key={order.id}>
+                        <td>#ORD-{order.id}</td>
+                        <td>{order.customer}</td>
+                        <td>${order.total.toFixed(2)}</td>
+                        <td><span className="badge success">{order.status}</span></td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
