@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { products } from '../data/mockData';
+import { supabase } from '../services/supabaseClient';
 import './CartCheckout.css';
 
 const CartCheckout = () => {
@@ -25,9 +26,23 @@ const CartCheckout = () => {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
+  const [discountPercent, setDiscountPercent] = useState(0);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        const userId = session.user.id;
+        const storedVisits = localStorage.getItem(`referral_visits_${userId}`) || '0';
+        setDiscountPercent(Math.min(parseInt(storedVisits, 10) * 10, 100));
+      }
+    });
+  }, []);
+
   const calculateSubtotal = () => cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const deliveryFee = 15;
-  const total = calculateSubtotal() + deliveryFee;
+  const subtotal = calculateSubtotal();
+  const discountAmount = subtotal * (discountPercent / 100);
+  const total = subtotal - discountAmount + deliveryFee;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -128,8 +143,16 @@ const CartCheckout = () => {
             
             <div className="summary-line" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--text-muted)'}}>
               <span>Qiimaha</span>
-              <span>${calculateSubtotal().toFixed(2)}</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
+            
+            {discountPercent > 0 && (
+              <div className="summary-line" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: 'var(--success-color)'}}>
+                <span>Abaalgud ({discountPercent}%)</span>
+                <span>-${discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+
             <div className="summary-line" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', color: 'var(--text-muted)'}}>
               <span>Gaarsiinta</span>
               <span>${deliveryFee.toFixed(2)}</span>

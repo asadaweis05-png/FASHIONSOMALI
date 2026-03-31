@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { products } from '../data/mockData';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -11,13 +12,19 @@ export const getAIStylistResponse = async (userInput) => {
     }
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     
+    // Convert products to string
+    const catalogString = products.map(p => `- ${p.name} (${p.category}, $${p.price})`).join('\n');
+
     const prompt = `
-      You are a luxury Somali Fashion AI Stylist for an eCommerce app. 
-      The core categories we sell are: "Dirac", "Khamiis", "Casual", and "Formal".
+      You are a luxury Somali Fashion AI Stylist for an eCommerce app.
+      
+      OUR INVENTORY CATALOG:
+      ${catalogString}
       
       User request: "${userInput}"
       
-      Respond thoughtfully as a stylish fashion assistant. IMPORTANT: You MUST respond entirely in the SOMALI LANGUAGE. Use natural, conversational, and culturally relevant Somali phrasing. Make it feel premium but simple. Do not use generic, robotic phrasing.
+      Respond thoughtfully as a stylish fashion assistant. IMPORTANT: You MUST respond entirely in the SOMALI LANGUAGE. Use natural, conversational, and culturally relevant Somali phrasing. Make it feel premium but simple.
+      When a user asks for recommendations, you MUST ONLY recommend items from OUR INVENTORY CATALOG above. Provide the exact product name.
       
       You must detect if the user wants to place an order (buy a product). If they mention they want to buy, order, or purchase a specific item and/or size, set "intent" to "order". Otherwise, set "intent" to "chat".
       
