@@ -35,8 +35,15 @@ const CartCheckout = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         const userId = session.user.id;
-        const storedVisits = localStorage.getItem(`referral_visits_${userId}`) || '0';
-        setDiscountPercent(Math.min(parseInt(storedVisits, 10) * 10, 100));
+        // Fetch from Supabase for synchronized reward
+        supabase.from('profiles')
+          .select('referral_count')
+          .eq('id', userId)
+          .single()
+          .then(({ data }) => {
+            const count = data ? data.referral_count : parseInt(localStorage.getItem(`referral_visits_${userId}`) || '0', 10);
+            setDiscountPercent(Math.min(count * 10, 100));
+          });
       }
     });
   }, []);

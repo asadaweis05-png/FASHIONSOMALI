@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { X, Gift } from 'lucide-react';
+import { supabase } from './services/supabaseClient';
 import NavBar from './components/NavBar';
 import BottomNav from './components/BottomNav';
 import Home from './pages/Home';
@@ -30,11 +31,29 @@ function ScrollAndRefHandler() {
       
       const hasVisited = sessionStorage.getItem(`visited_ref_${refParam}`);
       if (!hasVisited) {
+        // 1. Reward the REFERRER (the one who shared the link)
+        // We try to increment their count in Supabase if the table exists
+        supabase.from('profiles')
+          .select('referral_count')
+          .eq('id', refParam)
+          .single()
+          .then(({ data }) => {
+            const newCount = (data?.referral_count || 0) + 1;
+            supabase.from('profiles')
+              .update({ referral_count: newCount })
+              .eq('id', refParam)
+              .then(() => {
+                console.log('Referrer reward synchronized to Supabase');
+              });
+          });
+
+        // Also keep localStorage as a fallback/cache
         const currentVisits = parseInt(localStorage.getItem(`referral_visits_${refParam}`) || '0', 10);
         localStorage.setItem(`referral_visits_${refParam}`, currentVisits + 1);
+        
         sessionStorage.setItem(`visited_ref_${refParam}`, 'true');
         
-        // Show coupon popup for the visitor!
+        // 2. Reward the VISITOR (the one who clicked)
         setShowCoupon(true);
       }
     }

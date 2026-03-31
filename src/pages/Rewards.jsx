@@ -16,9 +16,20 @@ const Rewards = () => {
       
       if (session) {
         const userId = session.user.id;
-        // Mock backend: check local storage for visits to this user's link
-        const storedVisits = localStorage.getItem(`referral_visits_${userId}`) || '0';
-        setVisits(parseInt(storedVisits, 10));
+        // Fetch real visits from Supabase synchronized backend
+        supabase.from('profiles')
+          .select('referral_count')
+          .eq('id', userId)
+          .single()
+          .then(({ data }) => {
+            if (data) {
+              setVisits(data.referral_count);
+            } else {
+              // Fallback to local storage if profile not found
+              const storedVisits = localStorage.getItem(`referral_visits_${userId}`) || '0';
+              setVisits(parseInt(storedVisits, 10));
+            }
+          });
       }
       setLoading(false);
     });
