@@ -1,0 +1,254 @@
+.cart-checkout-page {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.empty-cart {
+  text-align: center;
+  padding: 6rem 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.empty-cart h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.empty-cart p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.checkout-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+@media (min-width: 992px) {
+  .checkout-layout {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+}
+
+/* Sections Common */
+.cart-summary-section,
+.checkout-form-section {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.cart-summary-section h2,
+.checkout-form-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+/* Cart Items */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cart-item {
+  display: flex;
+  gap: 1rem;
+}
+
+.cart-item-image {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: var(--accent-color);
+}
+
+.cart-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.item-header h4 {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.remove-btn {
+  color: #ef4444;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.remove-btn:hover {
+  opacity: 1;
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: auto;
+}
+
+.item-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.quantity-controls.small {
+  height: 32px;
+}
+
+.quantity-controls.small button {
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+}
+
+.item-total {
+  font-weight: 600;
+}
+
+/* Totals */
+.totals-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.total-row.grand-total {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Checkout Form */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.payment-methods {
+  margin-top: 0.5rem;
+}
+
+.payment-methods h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #fff;
+}
+
+.payment-option.selected {
+  border-color: var(--primary-color);
+  background-color: #fafafe;
+}
+
+.payment-option input[type="radio"] {
+  accent-color: var(--primary-color);
+  width: 18px;
+  height: 18px;
+}
+
+.option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.option-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.option-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.place-order-btn {
+  margin-top: 1rem;
+  height: 52px;
+  font-size: 1.05rem;
+}
+
+@media (min-width: 992px) {
+  .cart-summary-section {
+    position: sticky;
+    top: calc(var(--nav-height) + 2rem);
+    flex: 0 0 400px;
+  }
+}

@@ -1,0 +1,395 @@
+.product-detail-page {
+  padding-top: 4rem;
+}
+
+.product-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-bottom: 5rem;
+}
+
+/* Gallery */
+.product-gallery {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none; /* Firefox */
+}
+.thumbnails::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.thumb {
+  width: 60px;
+  height: 80px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.thumb:hover {
+  opacity: 1;
+}
+
+.thumb.active {
+  opacity: 1;
+  border-color: var(--primary-color);
+}
+
+.main-image-wrap {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--pill-bg);
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info Section */
+.product-info-section {
+  flex: 1;
+  width: 100%;
+}
+
+.product-title {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  margin: 0.5rem 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .product-title {
+    font-size: 3.5rem;
+  }
+  .product-info-section {
+    max-width: 500px;
+  }
+}
+
+.product-reviews-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+}
+
+.stars {
+  color: #8c6b12; /* Golden star color */
+  display: flex;
+  gap: 2px;
+}
+
+.review-text {
+  color: var(--text-muted);
+}
+
+.meta-separator {
+  color: var(--border-color);
+}
+
+.product-price-section {
+  margin-bottom: 2rem;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+/* Sub-sections common */
+.product-narrative,
+.color-selector,
+.size-selector {
+  margin-bottom: 2.5rem;
+}
+
+.product-info-section h3 {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.product-narrative p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.selector-header h3 {
+  margin-bottom: 0;
+}
+
+.selector-value,
+.size-guide {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.size-guide {
+  text-decoration: underline;
+}
+
+.color-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+.color-swatch.active {
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.size-btn {
+  border: 1px solid var(--border-color);
+  padding: 0.85rem 0;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  color: var(--text-muted);
+}
+
+.size-btn:hover {
+  border-color: var(--text-main);
+  color: var(--text-main);
+}
+
+.size-btn.active {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.add-to-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.save-btn {
+  font-size: 0.9rem;
+}
+
+/* AI Recs */
+.ai-glow {
+  color: #9d3f3f; /* Reddish hue from img */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ai-glow svg {
+  color: #9d3f3f;
+}
+
+.ai-recs-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.personalize-link {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+}
+
+.personalize-link:hover {
+  opacity: 0.7;
+}
+
+.rec-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem 2rem;
+}
+
+.rec-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.rec-image-wrap {
+  position: relative;
+  aspect-ratio: 4/5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  background-color: #fff;
+}
+
+.rec-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Since accessories */
+  padding: 1rem;
+}
+
+.overlay-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem; /* Image shows it on the right side for AI reco */
+}
+
+.rec-category {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.rec-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.rec-meta {
+  font-size: 0.85rem;
+  color: var(--primary-color);
+}
+
+.rec-meta span {
+  color: var(--text-muted);
+}
+
+/* Reviews */
+.reviews-section {
+  border-top: 1px solid var(--border-color);
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.review-item {
+  display: flex;
+  gap: 2rem;
+  max-width: 800px;
+}
+
+.review-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.review-content {
+  flex: 1;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.review-header h4 {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-main);
+}
+
+.review-meta {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.review-quote {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Desktop Overrides */
+@media (min-width: 768px) {
+  .product-main {
+    flex-direction: row;
+    gap: 5rem;
+  }
+  
+  .product-gallery {
+    flex-direction: row;
+  }
+  
+  .thumbnails {
+    flex-direction: column;
+  }
+  
+  .ai-recs-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  
+  .rec-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
