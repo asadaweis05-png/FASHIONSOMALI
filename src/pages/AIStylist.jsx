@@ -89,6 +89,7 @@ const AIStylist = () => {
         <div className="header-info">
           <h1>Aura AI Stylist</h1>
           <span className="status-dot"></span><span className="status-text">Waa onlayn</span>
+          <span style={{fontSize: '0.7rem', opacity: 0.5, marginLeft: '0.5rem'}}>v2.0-fix</span>
         </div>
       </div>
 

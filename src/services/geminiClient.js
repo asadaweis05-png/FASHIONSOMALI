@@ -3,13 +3,19 @@ import { products } from '../data/mockData';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-export const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
+// Remove global initialization to ensure the function always uses the latest environment variables
 
 export const getAIStylistResponse = async (userInput) => {
+  // Diagnostic log (partially masked for security)
+  const maskedKey = apiKey ? `${apiKey.substring(0, 6)}...${apiKey.substring(apiKey.length - 4)}` : "MISSING";
+  console.log("AI Initialization Diagnostic - API Key:", maskedKey);
+
   try {
     if (!apiKey) {
       throw new Error("Missing VITE_GEMINI_API_KEY in environment variables.");
     }
+    
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-1.5-flash' 
     });
