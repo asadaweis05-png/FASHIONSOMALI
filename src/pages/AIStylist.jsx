@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, ShoppingBag, Bug } from 'lucide-react';
-import { getAIStylistResponse, testAIConnection } from '../services/geminiClient';
+import { getAIStylistResponse, listAvailableModels } from '../services/geminiClient';
 import PaymentPopup from '../components/PaymentPopup';
 import './AIStylist.css';
 
@@ -77,12 +77,12 @@ const AIStylist = () => {
 
   const runTest = async () => {
     setIsLoading(true);
-    setDiagnosticResult("Testing connection...");
-    const result = await testAIConnection();
+    setDiagnosticResult("Listing available models...");
+    const result = await listAvailableModels();
     if (result.success) {
-      setDiagnosticResult("✅ Connection SUCCESS! The AI is reachable.");
+      setDiagnosticResult(`✅ Models Found: ${result.models.join(', ')}`);
     } else {
-      setDiagnosticResult(`❌ Connection FAILED: ${result.error}`);
+      setDiagnosticResult(`❌ Failed to list: ${result.error}`);
     }
     setIsLoading(false);
   };
@@ -123,7 +123,7 @@ const AIStylist = () => {
         <div className="diagnostic-panel" style={{background: '#f8f9fa', padding: '1rem', borderBottom: '1px solid #ddd', fontSize: '0.85rem'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem'}}>
             <strong>AI Diagnostics:</strong>
-            <button onClick={runTest} disabled={isLoading} style={{padding: '2px 8px', fontSize: '0.75rem'}}>Run Test</button>
+            <button onClick={runTest} disabled={isLoading} style={{padding: '2px 8px', fontSize: '0.75rem'}}>List Models</button>
           </div>
           {diagnosticResult && (
             <div style={{color: diagnosticResult.startsWith('✅') ? 'green' : 'red', wordBreak: 'break-all', fontFamily: 'monospace'}}>
