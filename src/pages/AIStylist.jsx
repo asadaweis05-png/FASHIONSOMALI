@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, ShoppingBag } from 'lucide-react';
-import { getAIStylistResponse } from '../services/geminiClient';
+import { Send, Sparkles, ShoppingBag, Bug } from 'lucide-react';
+import { getAIStylistResponse, testAIConnection } from '../services/geminiClient';
 import PaymentPopup from '../components/PaymentPopup';
 import './AIStylist.css';
 
@@ -15,6 +15,8 @@ const AIStylist = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [orderData, setOrderData] = useState(null);
+  const [diagnosticResult, setDiagnosticResult] = useState(null);
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -33,9 +35,14 @@ const AIStylist = () => {
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
+    setDiagnosticResult(null);
 
     try {
       const response = await getAIStylistResponse(userMessage);
+
+      if (response.rawError) {
+        setDiagnosticResult(`Error: ${response.rawError}`);
+      }
 
       // Check if it's an order intent
       if (response.intent === 'order' && response.orderInfo) {
@@ -64,8 +71,20 @@ const AIStylist = () => {
        console.error(error);
        setMessages(prev => [...prev, { role: 'assistant', content: 'Waan ka xumahay, khadka ayaa go\'ay. Fadlan mar kale isku day.' }]);
     } finally {
-      setIsLoading(false);
+       setIsLoading(false);
     }
+  };
+
+  const runTest = async () => {
+    setIsLoading(true);
+    setDiagnosticResult("Testing connection...");
+    const result = await testAIConnection();
+    if (result.success) {
+      setDiagnosticResult("✅ Connection SUCCESS! The AI is reachable.");
+    } else {
+      setDiagnosticResult(`❌ Connection FAILED: ${result.error}`);
+    }
+    setIsLoading(false);
   };
 
   const handlePaymentComplete = () => {
@@ -89,9 +108,30 @@ const AIStylist = () => {
         <div className="header-info">
           <h1>Aura AI Stylist</h1>
           <span className="status-dot"></span><span className="status-text">Waa onlayn</span>
-          <span style={{fontSize: '0.7rem', opacity: 0.5, marginLeft: '0.5rem'}}>v2.0-fix</span>
+          <span style={{fontSize: '0.7rem', opacity: 0.5, marginLeft: '0.5rem'}}>v3.0-fetch</span>
         </div>
+        <button 
+          className="debug-toggle" 
+          onClick={() => setShowDiagnostics(!showDiagnostics)}
+          title="Diagnostic Tools"
+        >
+          <Bug size={18} />
+        </button>
       </div>
+
+      {showDiagnostics && (
+        <div className="diagnostic-panel" style={{background: '#f8f9fa', padding: '1rem', borderBottom: '1px solid #ddd', fontSize: '0.85rem'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem'}}>
+            <strong>AI Diagnostics:</strong>
+            <button onClick={runTest} disabled={isLoading} style={{padding: '2px 8px', fontSize: '0.75rem'}}>Run Test</button>
+          </div>
+          {diagnosticResult && (
+            <div style={{color: diagnosticResult.startsWith('✅') ? 'green' : 'red', wordBreak: 'break-all', fontFamily: 'monospace'}}>
+              {diagnosticResult}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="chat-messages">
         {messages.map((msg, index) => (

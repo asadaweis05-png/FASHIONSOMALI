@@ -15,84 +15,79 @@ export const getAIStylistResponse = async (userInput) => {
       throw new Error("Missing VITE_GEMINI_API_KEY in environment variables.");
     }
     
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash' 
-    });
+    // Direct Fetch approach for better browser compatibility and easier debugging
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     
-    // Convert products to string
     const catalogString = products.map(p => `- ${p.name} (${p.category}, $${p.price})`).join('\n');
-
     const prompt = `
       You are a luxury Somali Fashion AI Stylist for an eCommerce app.
-      
       OUR INVENTORY CATALOG:
       ${catalogString}
-      
       User request: "${userInput}"
-      
-      Respond thoughtfully as a stylish fashion assistant. IMPORTANT: You MUST respond entirely in the SOMALI LANGUAGE. Use natural, conversational, and culturally relevant Somali phrasing. Make it feel premium but simple.
-      When a user asks for recommendations, you MUST ONLY recommend items from OUR INVENTORY CATALOG above. Provide the exact product name.
-      
-      You must detect if the user wants to place an order (buy a product). If they mention they want to buy, order, or purchase a specific item and/or size, set "intent" to "order". Otherwise, set "intent" to "chat".
-      
-      You must respond ONLY with a valid JSON string with the following exact structure:
-      {
-        "message": "Your stylish advice or order confirmation IN SOMALI here.",
-        "categories": ["CategoryName1"], // use from core categories or empty array
-        "intent": "chat" | "order",
-        "orderInfo": {
-          "product": "Product name or category they want to buy (e.g. Dirac)",
-          "size": "Requested size if mentioned (e.g. M, L, XL), otherwise null",
-          "color": "Requested color if mentioned, otherwise null"
-        }
-      }
+      Respond in SOMALI. Detect intent (chat/order). Output ONLY valid JSON:
+      { "message": "...", "categories": [], "intent": "chat"|"order", "orderInfo": { "product": "...", "size": "...", "color": "..." } }
     `;
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { response_mime_type: "application/json" }
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`API_ERROR: ${response.status} - ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await response.json();
+    const responseText = data.candidates[0].content.parts[0].text;
     
-    // Robust extraction of JSON from response
     try {
+      return JSON.parse(responseText);
+    } catch (e) {
+      // Fallback if JSON is weirdly formatted
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
-      
-      // Fallback if no JSON found but there is text
-      return {
-        message: responseText.trim(),
-        intent: "chat",
-        categories: []
-      };
-    } catch (parseError) {
-      console.warn("JSON Parse Error, falling back to raw text:", parseError);
-      return {
-        message: responseText.trim(),
-        intent: "chat",
-        categories: []
-      };
+      if (jsonMatch) return JSON.parse(jsonMatch[0]);
+      return { message: responseText.trim(), intent: "chat", categories: [] };
     }
   } catch (error) {
-    // Detailed error logging for easier diagnosis
     console.error("--- AI Stylist Error Details ---");
-    console.error("Message:", error.message);
-    console.error("Stack:", error.stack);
-    if (error.status) console.error("Status Code:", error.status);
-    console.error("API Key configured:", !!apiKey);
-    console.error("-------------------------------");
+    console.error(error);
     
     let errorMessage = "Waan ka xumahay, isku xirka khadka cilad ayaa gashay. Fadlan isku day hadhow ama hubi internet-kaaga.";
-    
-    if (error.message && error.message.includes('API_KEY_INVALID')) {
-       errorMessage = "Cilad ayaa ku timid API Key-ga. Fadlan hubi inuu sax yahay.";
-    } else if (error.message && error.message.includes('quota')) {
-       errorMessage = "Waan ka xumahay, xadka isticmaalka AI ayaa dhamaaday hadda. Fadlan dib u tijaabi berri.";
+    if (error.message.includes('API_ERROR')) {
+       // Extract specific error if possible
+       errorMessage = `Cilad ka timid Google API: ${error.message.split(' - ')[0]}`;
     }
     
     return {
       message: errorMessage,
-      categories: []
+      categories: [],
+      rawError: error.message // Include for diagnostic button
     };
+  }
+};
+
+export const testAIConnection = async () => {
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: "Respond with 'OK' if you can read this." }] }]
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: `${response.status}: ${JSON.stringify(errorData)}` };
+    }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 };
