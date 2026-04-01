@@ -11,7 +11,7 @@ export const getAIStylistResponse = async (userInput) => {
       throw new Error("Missing VITE_GEMINI_API_KEY in environment variables.");
     }
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash-latest' // Changed to latest for better reliability
+      model: 'gemini-1.5-flash' 
     });
     
     // Convert products to string
@@ -68,13 +68,20 @@ export const getAIStylistResponse = async (userInput) => {
       };
     }
   } catch (error) {
-    console.error("AI Stylist Error Detailed:", error.message || error);
+    // Detailed error logging for easier diagnosis
+    console.error("--- AI Stylist Error Details ---");
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+    if (error.status) console.error("Status Code:", error.status);
     console.error("API Key configured:", !!apiKey);
+    console.error("-------------------------------");
     
-    // Provide a more specific error fallback for debugging if needed
-    let errorMessage = "Waan ka xumahay, isku xirka khadka cilad ayaa gashay. Ma isku daynaa mar kale?";
+    let errorMessage = "Waan ka xumahay, isku xirka khadka cilad ayaa gashay. Fadlan isku day hadhow ama hubi internet-kaaga.";
+    
     if (error.message && error.message.includes('API_KEY_INVALID')) {
        errorMessage = "Cilad ayaa ku timid API Key-ga. Fadlan hubi inuu sax yahay.";
+    } else if (error.message && error.message.includes('quota')) {
+       errorMessage = "Waan ka xumahay, xadka isticmaalka AI ayaa dhamaaday hadda. Fadlan dib u tijaabi berri.";
     }
     
     return {
