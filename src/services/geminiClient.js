@@ -80,16 +80,29 @@ export const getAIStylistResponse = async (userInput) => {
 };
 
 export const listAvailableModels = async () => {
+  const maskedKey = apiKey ? `${apiKey.substring(0, 6)}...${apiKey.substring(apiKey.length - 4)}` : "MISSING";
+  const keyLength = apiKey ? apiKey.length : 0;
+  
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
     const response = await fetch(url);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      return { success: false, error: `${response.status}: ${JSON.stringify(errorData)}` };
+      return { 
+        success: false, 
+        error: `${response.status}: ${JSON.stringify(errorData)}`,
+        maskedKey,
+        keyLength
+      };
     }
     const data = await response.json();
-    return { success: true, models: data.models.map(m => m.name) };
+    return { 
+      success: true, 
+      models: data.models.map(m => m.name),
+      maskedKey,
+      keyLength
+    };
   } catch (error) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message, maskedKey, keyLength };
   }
 };

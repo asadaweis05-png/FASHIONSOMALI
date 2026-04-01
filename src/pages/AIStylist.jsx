@@ -79,11 +79,17 @@ const AIStylist = () => {
     setIsLoading(true);
     setDiagnosticResult("Listing available models...");
     const result = await listAvailableModels();
+    
+    let message = "";
     if (result.success) {
-      setDiagnosticResult(`✅ Models Found: ${result.models.join(', ')}`);
+      message = `✅ Models: ${result.models.join(', ')}`;
     } else {
-      setDiagnosticResult(`❌ Failed to list: ${result.error}`);
+      message = `❌ Error: ${result.error}`;
     }
+    
+    // Add key info for verification
+    const keyInfo = `\n[Key: ${result.maskedKey} (${result.keyLength} chars)]`;
+    setDiagnosticResult(message + keyInfo);
     setIsLoading(false);
   };
 
