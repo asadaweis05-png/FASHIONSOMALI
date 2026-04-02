@@ -7,8 +7,30 @@ const genAI = new GoogleGenerativeAI(apiKey.trim());
 
 export const getAIStylistResponse = async (userInput) => {
   try {
-    // Try the most reliable model name
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    // 1. Try to find an available model dynamically
+    let modelName = 'gemini-1.5-flash';
+    
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey.trim()}`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        const availableModels = data.models || [];
+        // Look for any model that supports generateContent
+        const supportedModel = availableModels.find(m => 
+          m.supportedGenerationMethods.includes('generateContent') && 
+          (m.name.includes('flash') || m.name.includes('pro'))
+        );
+        if (supportedModel) {
+          modelName = supportedModel.name.replace('models/', '');
+          console.log("Automatically selected model:", modelName);
+        }
+      }
+    } catch (e) {
+      console.warn("Dynamic model discovery failed, using default:", e);
+    }
+
+    const model = genAI.getGenerativeModel({ model: modelName });
     
     const catalogString = products.map(p => `- ${p.name} (${p.category}, $${p.price})`).join('\n');
     const prompt = `
