@@ -103,7 +103,7 @@
 .shop-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 1rem;
+  gap: 2rem 1.25rem;
   margin-bottom: 5rem;
 }
 
@@ -177,5 +177,6 @@
   
   .shop-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 3rem 2rem;
   }
 }

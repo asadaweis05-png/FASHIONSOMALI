@@ -59,7 +59,7 @@ function ScrollAndRefHandler() {
     }
   }, [location]);
 
-  if (!showCoupon) return null;
+  if (!showCoupon || location.pathname.startsWith('/admin')) return null;
 
   return (
     <div className="coupon-popup-overlay">

@@ -84,3 +84,25 @@ export const products = [
     badges: ['Style Sync'],
   }
 ];
+
+export const lessons = [
+  {
+    id: '1',
+    title: 'Somali Fashion Heritage 101',
+    description: 'An introduction to the rich history of Somali textiles and traditional designs.',
+    urls: [
+      { id: 'u1', label: 'Intro Video', url: 'https://www.youtube.com/watch?v=example1' },
+      { id: 'u2', label: 'History PDF', url: 'https://example.com/somali-heritage.pdf' }
+    ],
+    createdAt: '2026-03-30T10:00:00Z'
+  },
+  {
+    id: '2',
+    title: 'Modern Stylist Techniques',
+    description: 'Learn how to combine traditional elements with modern fashion trends.',
+    urls: [
+      { id: 'u3', label: 'Styling Guide', url: 'https://example.com/styling-guide.pdf' }
+    ],
+    createdAt: '2026-03-31T14:30:00Z'
+  }
+];

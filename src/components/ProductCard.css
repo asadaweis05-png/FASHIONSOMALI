@@ -13,16 +13,17 @@
 .product-image-wrap {
   aspect-ratio: 3/4;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 20px; /* Softer radius */
   background-color: var(--accent-color);
   display: block;
   position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  transition: box-shadow 0.4s ease;
+  box-shadow: 0 6px 18px rgba(8, 40, 64, 0.04);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover .product-image-wrap {
-  box-shadow: 0 12px 30px rgba(12, 59, 94, 0.15);
+  box-shadow: 0 16px 40px rgba(8, 40, 64, 0.12);
+  transform: translateY(-4px);
 }
 
 .product-image {
@@ -33,7 +34,7 @@
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.1);
+  transform: scale(1.05); /* reduced from 1.1 so it's more subtle */
 }
 
 .product-badges {

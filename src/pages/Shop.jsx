@@ -32,14 +32,14 @@ const Shop = () => {
           <h1 className="title-large" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Dukaanka</h1>
         </div>
         
-        <div className="search-bar-wrap" style={{ maxWidth: '400px', width: '100%', position: 'relative' }}>
-          <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+        <div className="search-bar-wrap" style={{ maxWidth: '450px', width: '100%', position: 'relative' }}>
+          <Search size={18} style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input 
             type="text" 
             placeholder="Raadi dhar ama style aad jeceshahay..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: '100%', padding: '0.85rem 1rem 0.85rem 2.5rem', borderRadius: '30px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--secondary-color)' }}
+            style={{ width: '100%', padding: '0.85rem 1.25rem 0.85rem 3rem', borderRadius: '40px', border: '1.5px solid var(--border-color)', outline: 'none', background: 'white', transition: 'border-color 0.3s ease', fontSize: '0.95rem' }}
           />
         </div>
       </div>
