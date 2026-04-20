@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
 
 :root {
-  --primary-color: #082840; /* Darker, more premium Navy */
-  --secondary-color: #fdfcvfa; /* Cleaner off-white */
-  --accent-color: #d8cdb8; /* Refined soft gold/sand */
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --border-color: #eae5dc;
-  --success-color: #10b981;
-  --pill-bg: #f4efeb;
-  --pill-active: #082840;
-
+  --primary-color: #0A192F; /* Deep rich navy, almost black */
+  --secondary-color: #FAF9F6; /* Premium alabaster off-white */
+  --accent-color: #B28F40; /* High-end muted gold */
+  --text-main: #1A1F26;
+  --text-muted: #646E7A;
+  --border-color: #E6E1D8;
+  --success-color: #059669;
+  --pill-bg: #F0EAE1;
+  --pill-active: var(--primary-color);
+  
   --font-body: 'Inter', sans-serif;
   --font-heading: 'Playfair Display', serif;
   --nav-height: 84px;
@@ -71,14 +71,15 @@ h2,
 h3,
 h4 {
   font-family: var(--font-heading);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--primary-color);
+  letter-spacing: -0.01em;
 }
 
 .title-large {
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .eyebrow {
@@ -101,46 +102,61 @@ h4 {
 .btn-primary {
   background: var(--primary-color);
   color: #ffffff;
-  padding: 0.85rem 2rem;
+  padding: 1rem 2.25rem;
   font-weight: 500;
   font-size: 0.95rem;
-  border-radius: 40px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 14px rgba(8, 40, 64, 0.15);
-  letter-spacing: 0.02em;
+  box-shadow: 0 4px 15px rgba(10, 25, 47, 0.15);
+  letter-spacing: 0.03em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(8, 40, 64, 0.25);
-  background: #051a2a;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(10, 25, 47, 0.25);
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
 }
 
 .btn-outline {
-  border: 1.5px solid var(--border-color);
-  padding: 0.85rem 2rem;
+  border: 1px solid var(--border-color);
+  padding: 1rem 2.25rem;
   font-weight: 500;
   font-size: 0.95rem;
-  border-radius: 40px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
   color: var(--text-main);
   background-color: transparent;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 
 .btn-outline:hover {
-  border-color: var(--primary-color);
-  background-color: rgba(8, 40, 64, 0.03);
-  transform: translateY(-2px);
+  border-color: var(--accent-color);
+  background-color: var(--secondary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(178, 143, 64, 0.1);
 }
 
 /* Custom Premium Scrollbar */
